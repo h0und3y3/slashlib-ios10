@@ -481,7 +481,9 @@ final class API {
 
     func titleDetails(slug: String, site: Int?, done: @escaping (Result<TitleDetails, Error>) -> Void) {
         let q = ["summary", "genres", "tags"].map { URLQueryItem(name: "fields[]", value: $0) }
-        resolve(site, { s, cb in
+        
+        // Явно указываем типы параметров замыкания, чтобы Swift не терял контекст дженерика T
+        resolve(site, { (s: Int?, cb: @escaping (Result<TitleDetails, Error>) -> Void) in
             self.request("/manga/\(self.encoded(slug))", q, site: s) { result in
                 switch result {
                 case .failure(let e):
@@ -512,4 +514,25 @@ final class API {
 
     // Список хостов картинок от сервера (ПРОВЕРИТЬ: формат ответа). При неудаче остаётся Config.imageBase.
     func loadImageServers() {
-        r
+        request("/constants", [URLQueryItem(name: "fields[]", value: "imageServers")], site: nil) { result in
+            guard case .success(let data) = result,
+                  let root = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any],
+                  let d = root["data"] as? [String: Any],
+                  let list = d["imageServers"] as? [[String: Any]] else { return }
+            var entries: [ImageServers.Entry] = []
+            for (idx, s) in list.enumerated() {
+                guard let url = s["url"] as? String, !url.isEmpty else { continue }
+                let ids = (s["site_ids"] as? [Int]) ?? []
+                var rank = idx
+                switch s["id"] as? String {
+                case "main"?: rank = -2
+                case "secondary"?: rank = -1
+                default: break
+                }
+                entries.append(ImageServers.Entry(url: url, siteIds: ids, rank: rank))
+            }
+            DispatchQueue.main.async { ImageServers.shared.update(entries) }
+        }
+    }
+} // <--- Закрывающая скобка класса API в самом конце файла
+
