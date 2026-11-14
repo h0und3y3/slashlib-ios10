@@ -478,10 +478,11 @@ final class API {
         }
         next(0)
     }
-
-    func titleDetails(slug: String, site: Int?, done: @escaping (Result<TitleDetails, Error>) -> Void) {
+     func titleDetails(slug: String, site: Int?, done: @escaping (Result<TitleDetails, Error>) -> Void) {
         let q = ["summary", "genres", "tags"].map { URLQueryItem(name: "fields[]", value: $0) }
-        resolve(site, { s, cb in
+        
+        // Явно указываем тип TitleDetails для замыкания attempt, чтобы компилятор не терял контекст
+        resolve(site, { (s: Int?, cb: @escaping (Result<TitleDetails, Error>) -> Void) in
             self.request("/manga/\(self.encoded(slug))", q, site: s) { result in
                 switch result {
                 case .failure(let e):
@@ -503,8 +504,9 @@ final class API {
             }
             DispatchQueue.main.async { done(out) }
         })
+     }
+    
     }
-
     // ПРОВЕРИТЬ: путь проверки токена
     func me(done: @escaping (Result<MeResponse, Error>) -> Void) {
         get("/auth/me", [], MeResponse.self, site: nil, done: done)
