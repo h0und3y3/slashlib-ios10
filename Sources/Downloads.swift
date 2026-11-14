@@ -52,7 +52,7 @@ final class DownloadStore {
         for d in items.values { sum += d.bytes }
         return sum
     }
-
+   
     private static func ordered(_ list: [DownloadedChapter]) -> [DownloadedChapter] {
         return list.sorted { a, b in
             let ka = a.chapter.sortKey, kb = b.chapter.sortKey
@@ -60,7 +60,7 @@ final class DownloadStore {
             if ka.1 != kb.1 { return ka.1 < kb.1 }
             return a.date < b.date
         }
-    }
-} // <- Закрывает метод ordered (или код внутри него, проверьте содержимое)
- // <- Закрывает класс DownloadStore
+    } // <--- 1-я скобка закрывает метод ordered
+}   // <--- 2-я скобка закрывает класс DownloadStore
+
 
