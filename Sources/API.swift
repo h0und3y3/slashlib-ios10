@@ -481,8 +481,8 @@ final class API {
 
     func titleDetails(slug: String, site: Int?, done: @escaping (Result<TitleDetails, Error>) -> Void) {
         let q = ["summary", "genres", "tags"].map { URLQueryItem(name: "fields[]", value: $0) }
-        resolve(site, { s, cb in
-            self.request("/manga/\(self.encoded(slug))", q, site: s) { result in
+        resolve(site) { (s, cb: @escaping (Result<TitleDetails, Error>) -> Void) in
+            self.request("/manga/\(self.encode(slug))", q, site: s) { result in
                 switch result {
                 case .failure(let e):
                     cb(.failure(e))
