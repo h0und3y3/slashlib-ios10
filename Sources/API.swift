@@ -511,8 +511,7 @@ final class API {
     func me(done: @escaping (Result<MeResponse, Error>) -> Void) {
         get("/auth/me", [], MeResponse.self, site: nil, done: done)
     }
-
-    // Список хостов картинок от сервера (ПРОВЕРИТЬ: формат ответа). При неудаче остаётся Config.imageBase.
+    // Список хостов картинок от сервера...
     func loadImageServers() {
         request("/constants", [URLQueryItem(name: "fields[]", value: "imageServers")], site: nil) { result in
             guard case .success(let data) = result,
@@ -534,4 +533,5 @@ final class API {
             DispatchQueue.main.async { ImageServers.shared.update(entries) }
         }
     }
-}
+} // <--- Вот эта закрывающая скобка класса API должна быть в самом конце файла!
+
