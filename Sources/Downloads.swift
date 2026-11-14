@@ -54,3 +54,13 @@ final class DownloadStore {
     }
 
     private static func ordered(_ list: [DownloadedChapter]) -> [DownloadedChapter] {
+        return list.sorted { a, b in
+            let ka = a.chapter.sortKey, kb = b.chapter.sortKey
+            if ka.0 != kb.0 { return ka.0 < kb.0 }
+            if ka.1 != kb.1 { return ka.1 < kb.1 }
+            return a.date < b.date
+        }
+    }
+} // <- Закрывает метод ordered (или код внутри него, проверьте содержимое)
+} // <- Закрывает класс DownloadStore
+
