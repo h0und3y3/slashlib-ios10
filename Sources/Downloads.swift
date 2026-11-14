@@ -62,5 +62,5 @@ final class DownloadStore {
         }
     }
 } // <- Закрывает метод ordered (или код внутри него, проверьте содержимое)
-} // <- Закрывает класс DownloadStore
+ // <- Закрывает класс DownloadStore
 
