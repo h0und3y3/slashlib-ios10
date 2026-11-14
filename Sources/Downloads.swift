@@ -60,7 +60,17 @@ final class DownloadStore {
             if ka.1 != kb.1 { return ka.1 < kb.1 }
             return a.date < b.date
         }
-    } // <--- 1-я скобка закрывает метод ordered
+   } // <--- 1-я скобка закрывает метод ordered
+        // Возвращает список скачанных глав для конкретного тайтла
+    func chapters(slug: String) -> [DownloadedChapter] {
+        return items.values.filter { $0.ref.slug == slug }
+    }
+
+    // Возвращает конкретную скачанную главу по её id
+    func downloaded(slug: String, chapterId: Int) -> DownloadedChapter? {
+        return items.values.first { $0.ref.slug == slug && $0.chapterId == chapterId }
+    }
+    
 }   // <--- 2-я скобка закрывает класс DownloadStore
 
 
