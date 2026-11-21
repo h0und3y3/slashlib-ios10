@@ -1,0 +1,9 @@
+Package: ru.slashlib.client
+Name: Slashlib
+Version: 0.7.0
+Architecture: iphoneos-arm
+Description: Unofficial Slashlib reader
+Maintainer: you <you@example.com>
+Author: you <you@example.com>
+Section: Utilities
+Depends: firmware (>= 10.0)
